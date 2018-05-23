@@ -27,7 +27,7 @@ public class MemberController {
 	
 	@Autowired
 	private MemberDao memberDao;
-
+	//준비단계 브렌치
 	//가입자 리스트 확인
 	@RequestMapping(value="/member_list.sf", method=RequestMethod.GET)
 	protected ModelAndView listBoard(HttpServletRequest request, HttpServletResponse response) throws Exception {	

@@ -16,7 +16,7 @@ public class InterceptorController {
 
 	@Autowired
 	private MemberDao memberDao;
-	
+	//
 	@RequestMapping(value="/inter_s.sf", method=RequestMethod.GET)
 	public ModelAndView loginsuccess(HttpServletRequest request, HttpServletResponse response) {
 		

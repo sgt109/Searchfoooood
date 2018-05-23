@@ -181,7 +181,7 @@ console.log(markerpoarr[0]); */
 
 for(var i = 0; i<object.length; i++){
 	 console.log("title :    "  ,    object[i].title);
-	contentString=(object[i].title + object[i].address + object[i].category +);
+	contentString=(object[i].title + object[i].address + object[i].category);
 	console.log("두개 합친거 "      ,   contentString);
 	contentStringarr.push(contentString); 
 	
@@ -203,7 +203,7 @@ for(var i = 0; i<object.length; i++){
 // content에 각각의 내용이 들어 가는 것. 
 
  	 //각각의 마커들을 모으자 !
- naver.maps.Event.addListener(markers, "click", function(e) {
+/*  naver.maps.Event.addListener(markers, "click", function(e) {
     for(var i=0; i<object.length; i++)
 	 if ()   n                              {
     	infowindows.open(map, markers);
@@ -213,7 +213,7 @@ for(var i = 0; i<object.length; i++){
     }
 });
 
-infowindows.open(map, markers);
+infowindows.open(map, markers); */
 
     
   

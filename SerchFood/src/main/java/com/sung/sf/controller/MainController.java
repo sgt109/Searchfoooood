@@ -35,7 +35,7 @@ import net.sf.json.JSONSerializer;
 
 @Controller
 public class MainController {
-
+///////////////////////////
 	@Autowired
 	private SearchDao searchDao;
 	public static StringBuilder sb;

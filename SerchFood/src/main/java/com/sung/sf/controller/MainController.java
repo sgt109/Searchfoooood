@@ -39,7 +39,7 @@ public class MainController {
 	@Autowired
 	private SearchDao searchDao;
 	public static StringBuilder sb;
-
+	/////////
 	// 음식 검색
 	@RequestMapping(value = "/main.sf", method = RequestMethod.GET)
 	public ModelAndView Main(HttpServletRequest request, HttpServletResponse response, HttpSession session)

@@ -204,7 +204,7 @@ public class MainController {
 	        //화면 중단 주변 식당 추천
 	        try {
 	            String text = URLEncoder.encode(commendCategory, "UTF-8");
-	            String apiURL = "https://openapi.naver.com/v1/search/local?query="+ text; //검색 json 결과
+	            String apiURL = "https://openapi.naver.com/v1/search/local?query="+ text + "&start=" + start; //검색 json 결과  + "&display=50"
 
 	            URL url = new URL(apiURL);
 	            HttpURLConnection con = (HttpURLConnection)url.openConnection();

@@ -55,6 +55,7 @@
           <div class="col-xl-9 mx-auto">
             <h1 class="mb-5">밥먹고 합시다!</h1>
           </div>
+          
           <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
             <form action="search_list.sf" method="get">
               <div class="form-row">

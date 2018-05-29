@@ -91,19 +91,16 @@ public class MemberController {
 		boolean sign = memberDao.login(userId, userPw);
 		if(sign) {
 			session.setAttribute("userid",userId);
-			return new ModelAndView("redirect:inter_s.sf");
+			return new ModelAndView("redirect:main.sf");
 		}else{
-			return new ModelAndView("redirect:inter_f.sf");
+			return new ModelAndView("redirect:member_login.sf");
 		}
 	}
 	
-	@RequestMapping(value="/member_logout.sf", method=RequestMethod.POST)
-	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response, HttpSession session)	{
+	@RequestMapping(value="/member_logout.sf", method=RequestMethod.GET)
+	public String logout(HttpServletRequest request, HttpServletResponse response, HttpSession session)	{
 		session.invalidate();
-		ModelAndView mav= new  ModelAndView();
-		mav.setViewName("login");
-		return mav;
-		
+		 return "redirect:/main.sf";
 	}
 	
 	//회원가입
@@ -160,10 +157,13 @@ public class MemberController {
 	}
 	
 	@RequestMapping(value="/member_numbercheck.sf",  method = {RequestMethod.GET, RequestMethod.POST},produces = "application/json")
+	@ResponseBody
 	public boolean numbercheck(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		//입력된 값
 		boolean numbercheck_flag =false;
 		String emailcheck=request.getParameter("emailcheck");
+		System.out.println(emailcheck);
+		
 		if(((String)session.getAttribute("joinCode")).equals(emailcheck)) {
 			numbercheck_flag=true;
 		}
@@ -200,7 +200,7 @@ public class MemberController {
 		
 		memberDao.join(dto);
 		
-		ModelAndView mav =new ModelAndView("redirect:member_list.sf");
+		ModelAndView mav =new ModelAndView("redirect:member_loginform.sf");
 		return mav;
 		
 	}

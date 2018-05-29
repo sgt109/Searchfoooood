@@ -45,7 +45,6 @@ $(document).ready(function(){
 		}
 		
 	});
-	
 //ajax로 비밀번호 유효성 검사
 $("#pw").keyup(function(event){
 	if(!$("#pw").val().match(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~,-])|([!,@,#,$,%,^,&,*,?,_,~,-].*[a-zA-Z0-9])/)){

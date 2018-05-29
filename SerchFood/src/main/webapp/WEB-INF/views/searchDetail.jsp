@@ -18,9 +18,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <title>Insert title here</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+    
+    <!-- 지도 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=JsRivo1hBqek9J_l3Tw3&submodules=geocoder"></script>
 
     <!-- 스타일 -->
     <link href="../assets/css/bootstrap-ko.css" rel="stylesheet">
@@ -152,10 +157,8 @@
     </nav>
 	</c:if>
       <hr>
-
-      <div class="jumbotron">
-        <h1>대단하고 어마어마한 마케팅 문구!</h1>
-        <p class="lead">그리스의 천문학자. 알렉산드리아 도서관에서 일했으며, 세계에서 제일 먼저 지동설을 믿은 사람으로 전해지고 있다. 또한 기하학을 응용하여 태양이나 달의 크기를 처음으로 계산하였다.</p>
+		<!-- class="jumbotron" style="width:100%;height:400px;"--> 
+      <div id="map" style="width:100%;height:400px;">
       </div>
 
       <hr>
@@ -195,7 +198,7 @@
       
       <strong><h3>다른 주변 식당</h3></strong><br>
       <div class="row">
-		<c:forEach items="${menuResult}" var="menu">
+		<c:forEach items="${menuResult}" var="menu" begin="0" end="9">
 		<c:if test="${menu.mapx > mapx-500 && menu.mapx < mapx+500 && menu.mapy > mapy-500 && menu.mapy < mapy+500 && menu.mapx ne mapx}">
         <div class="col-lg-4 col-sm-6 portfolio-item">
           <div class="card h-100">
@@ -340,7 +343,286 @@
 	};
 	</script>
 	
-    <!-- 자바스크립트
+<script>
+
+//현재 위치 콘솔에 출력해보기
+navigator.geolocation.getCurrentPosition(function(position) {
+	  console.log(position.coords.latitude + ", " + position.coords.longitude);
+
+// 현재위치 변수 만들기 + 위도 경도를 네이버 지도에 맞는 위도 경도로 만들기
+var thisposition = new naver.maps.LatLng(position.coords.latitude, position.coords.longitude);
+var utmk = naver.maps.TransCoord.fromLatLngToUTMK(thisposition); // 위/경도 -> UTMK
+var tm128 = new naver.maps.Point(position.coords.latitude, position.coords.longitude);
+tm128 = naver.maps.TransCoord.fromUTMKToTM128(utmk);   // UTMK -> TM128
+
+console.log("tm122222228 ," + tm128);
+console.log("tm128 ," + tm128.x); //tm128 x 좌표
+console.log("tm1282222222 ," + tm128.y); //tm128 y좌표
+var posi= new naver.maps.Point(tm128.x, tm128.y);
+
+
+// 현재 위도 확인
+var latitude =position.coords.latitude;
+console.log("now la   ," + latitude);
+
+// 현재 경도 확인
+var longitude =position.coords.longitude;
+console.log("now lo   ," + longitude);
+
+//지도 생성하기
+var HOME_PATH = window.HOME_PATH || '.';
+map = new naver.maps.Map("map", {
+    center: new naver.maps.Point(tm128.x, tm128.y),
+    zoom: 8,
+    mapTypes: new naver.maps.MapTypeRegistry({
+        'normal': naver.maps.NaverMapTypeOption.getNormalMap({
+            projection: naver.maps.TM128Coord
+        }),
+        'terrain': naver.maps.NaverMapTypeOption.getTerrainMap({
+            projection: naver.maps.TM128Coord
+        }),
+        'satellite': naver.maps.NaverMapTypeOption.getSatelliteMap({
+            projection: naver.maps.TM128Coord
+        }),
+        'hybrid': naver.maps.NaverMapTypeOption.getHybridMap({
+            projection: naver.maps.TM128Coord
+        })
+    }),
+    mapTypeControl: true
+});
+
+var circle = new naver.maps.Circle({
+    map: map,
+    center: tm128,
+    radius:1000,
+    fillColor: 'crimson',
+    fillOpacity: 0.2
+ });
+
+
+var marker1 = new naver.maps.Marker({//현재 내위치
+	position: posi,
+    map: map,
+    icon: {
+        path: [
+            new naver.maps.Point(0, 70), new naver.maps.Point(20, 100), new naver.maps.Point(40, 70),
+            new naver.maps.Point(30, 70), new naver.maps.Point(70, 0), new naver.maps.Point(10, 70)
+        ],
+        style: "closedPath",
+        anchor: new naver.maps.Point(23, 103),
+        fillColor: '#ff0000',
+        fillOpacity: 1,
+        strokeColor: '#000000',
+        strokeStyle: 'solid',
+        strokeWeight: 3
+    }
+});
+
+var object = ${menuResult};
+var jmapx= [];
+var jmapy = [];
+
+for(var i = 0; i<object.length; i++){
+	
+	var mapx = object[i].mapx;
+	var mapy = object[i].mapy;
+	
+	
+ 	if(mapx-tm128.x<100000){//참거짓을 판별하는 척도 일뿐  1000보다 작으면 그것에 해당하는 mapx 
+ 		
+ 		jmapx.push(mapx);
+ 		console.log("if문 사이에서의 " + jmapx[2]);
+ 		
+	}
+
+ 	if(mapy-tm128.y<100000){//참거짓을 판별하는 척도 일뿐
+		jmapy.push(mapy);
+	}
+	
+ 
+	console.log("x값 = " + jmapx+ ""+ "y값= " + jmapy);	
+
+}//상단 for문
+var markers = [],
+infoWindows = [];
+var markers = [],   //마커의 모임
+infoWindows = [];   //정보창의 모임
+var contentStringarr =[]; //각 좌표에 대한 내용들 즉 , 제목 주소 카테고리
+
+//jmapx와 jmapy 값들을 지도에 찍기
+for(var i = 0; i<object.length; i++){ //찍는 위치
+		var marker2 = new naver.maps.Marker({
+   		position: new naver.maps.Point(jmapx[i],jmapy[i]),
+   		map: map
+		});
+markers.push(marker2);
+
+} //상단 for문 마침
+
+var infoWindow;
+for(var i = 0; i<object.length; i++){
+  contentString=("title     :"  + object[i].title +  "   address     :"+ object[i].address +  "   category     :" +  object[i].category);
+  contentStringarr.push(contentString); 
+  console.log(contentStringarr);
+
+   infoWindow = new naver.maps.InfoWindow({
+    content:'<div style="width:150px;text-align:center;padding:10px;"> <b>"'+  contentStringarr[i] +'"</b>.</div>' 
+   });
+   infoWindows.push(infoWindow)
+  
+   // 좌표의 모음들.
+}//상단 for문   
+           
+  console.log("0번쨰" , markers[0]);
+  console.log(infoWindows);
+
+  function equalindex(seq){
+	  
+	  var markerss = markers[seq];
+	  var infowindowss = infoWindows[seq];
+	  
+	  if(${mapx}==jmapx[i] && ${mapy}==jmapy[i]) {
+			infowindowss.open(map, markerss);
+		}
+	  
+     return function(e){
+  
+	   if(infowindowss.getMap()){
+		   infowindowss.close();
+         } else {
+        	 infowindowss.open(map, markerss);
+             }
+        }
+     
+  }    
+
+  for (var i=0, ii=markers.length; i<ii; i++) {
+     naver.maps.Event.addListener(markers[i], "click", equalindex(i));
+  } 
+
+
+//마커 있던 자리
+ /* for(var i = 0; i<object.length; i++){ //찍는 위치
+	 
+		var searchPosi= new naver.maps.Point(jmapx[i], jmapy[i]);
+		console.log("디스포지션 씨발" + searchPosi + "  mapy나옴?" + ${mapy});
+ 	
+		if(${mapy} == jmapy[i]){
+		
+			var marker2 = new naver.maps.Marker({
+				position: searchPosi,
+    			map: map
+			});
+		}
+ }
+//여기까지가 마커찍기 
+
+//검색한 식당 설명-------------------
+<c:forEach items="${searchResult}" var="result">
+<c:if test="${result.mapx eq mapx && result.mapy eq mapy}">
+	var contentString = [
+        '<div class="iw_inner">',
+        '   <h3>"${result.title}"</h3>',
+        '   <p>${result.address} <br /> ${result.roadAddress}<br />',
+        '       ${result.telephone} | ${result.category}<br />',
+        '       <a href="${result.link}" target="_blank">${result.link}/</a>',
+        '   </p>',
+        '</div>'
+    ].join('');
+
+var infowindow = new naver.maps.InfoWindow({
+    content: contentString
+});
+
+naver.maps.Event.addListener(marker2, "click", function(e) {
+    if (infowindow.getMap()) {
+        infowindow.close();
+    } else {
+        infowindow.open(map, marker2);
+    }
+});
+
+infowindow.open(map, marker2);
+</c:if>
+</c:forEach>
+//----------------------------------
+
+//주변 추천 집 마커 찍기
+
+var nearby = ${menuResult};
+var nmapx = [];
+var nmapy = [];
+
+ for(var i = 0; i<nearby.length; i++){
+		
+		var mapx = nearby[i].mapx;
+		var mapy = nearby[i].mapy;
+		
+		
+	 	if(mapx-tm128.x<1000){//참거짓을 판별하는 척도 일뿐  1000보다 작으면 그것에 해당하는 mapx 
+	 		
+	 		nmapx.push(mapx);
+	 		console.log("if문 사이에서의 " + nmapx[2]);
+	 		
+		}
+
+	 	if(mapy-tm128.y<1000){//참거짓을 판별하는 척도 일뿐
+			nmapy.push(mapy);
+		}
+		
+	 
+		console.log("x값 = " + nmapx+ ""+ "y값= " + nmapy);	
+
+	}
+
+	//마커 있던 자리
+	 for(var i = 0; i<nearby.length; i++){ //찍는 위치
+	
+		 var nearbyPosi = new naver.maps.Point(nmapx[i], nmapy[i]);
+			console.log("니얼바이 씨발" + nearbyPosi + "  mapy나옴?" + nmapx[i]);	 
+		 
+	if(nmapx[i]>=${mapx}-500 && nmapx[i]<=${mapx}+500 && nmapy[i]>=${mapy}-500 && nmapy[i]<=${mapy}+500){
+		var marker3 = new naver.maps.Marker({
+	    	position: nearbyPosi,
+	    	map: map
+		});
+	}
+
+	 }
+	//검색한 식당 설명-------------------
+	 <c:forEach items="${menuResult}" var="menu">
+	 <c:if test="${menu.mapx eq mapx && menu.mapy eq mapy}">
+	 	var contentString = [
+	         '<div class="iw_inner">',
+	         '   <h3>"${menu.title}"</h3>',
+	         '   <p>${menu.address} <br /> ${menu.roadAddress}<br />',
+	         '       ${menu.telephone} | ${menu.category}<br />',
+	         '       <a href="${menu.link}" target="_blank">${menu.link}/</a>',
+	         '   </p>',
+	         '</div>'
+	     ].join('');
+	 </c:if>
+	 </c:forEach>
+	 var infowindow = new naver.maps.InfoWindow({
+	     content: contentString
+	 });
+
+	 naver.maps.Event.addListener(marker3, "click", function(e) {
+	     if (infowindow.getMap()) {
+	    	 infowindow.open(map, marker3);
+	     } else {
+	    	 infowindow.close();
+	     }
+	 });
+
+	 infowindow.open(map, marker3);
+	 //---------------------------------- */
+
+})//지우지 말것 최상단 메소드 
+
+</script>
+	
+   <!-- 자바스크립트
     ================================================== -->
     <!-- 페이지를 빨리 읽어들이도록 문서 마지막에 배치 -->
     <!-- <script src="../assets/js/jquery.js"></script>

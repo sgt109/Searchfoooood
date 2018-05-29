@@ -75,7 +75,7 @@
       <div class="container">
         <a class="navbar-brand" href="main.sf">밥먹고 합시다</a>
         
-        <p style=colro:white;>${userid} 님 환영합니다.</p>
+        <p style=color:white;>${userid} 님 환영합니다.</p>
         
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
